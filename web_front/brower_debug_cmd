@@ -1,0 +1,229 @@
+目前控制台方法和属性有：
+
+["$$", "$x", "dir", "dirxml", "keys", "values", "profile", "profileEnd", "monitorEvents", "unmonitorEvents", "inspect", "copy", "clear", "getEventListeners", "undebug", "monitor", "unmonitor", "table", "$0", "$1", "$2", "$3", "$4", "$_"]
+
+下面我们来一一介绍一下各个方法主要的用途。
+
+一般情况下我们用来输入信息的方法主要是用到如下四个：
+
+    console.log 用于输出普通信息
+
+    console.info 用于输出提示性信息
+
+    console.error用于输出错误信息
+
+    console.warn用于输出警示信息
+
+
+一、显示信息的命令
+
+Firebug内置一个console对象，提供5种方法，用来显示信息。
+
+最简单的方法是console.log()，可以用来取代alert()或document.write()。比如，在网页脚本中使用console.log("Hello World")，加载时控制台就会自动显示如下内容。
+
+[null > FEDB3F5B-FCE5-4D04-A24C-709C779DDDE5.png]
+
+另外，根据信息的不同性质，console对象还有4种显示信息的方法，分别是一般信息console.info()、除错信息console.debug()、警告提示console.warn()、错误提示console.error()。
+
+比如，在网页脚本中插入下面四行：
+
+    　　console.info("这是info");
+
+    　　console.debug("这是debug");
+
+    　　console.warn("这是warn");
+
+    　　console.error("这是error");
+
+加载时，控制台会显示如下内容。
+
+[null > 35A067C2-D1AC-428D-98F6-9FBFF96A4EA8.png]
+
+可以看到，不同性质的信息前面有不同的图标，并且每条信息后面都有超级链接，点击后跳转到网页源码的相应行。
+二、占位符
+
+console对象的上面5种方法，都可以使用printf风格的占位符。不过，占位符的种类比较少，只支持字符（%s）、整数（%d或%i）、浮点数（%f）和对象（%o）四种。
+
+比如，
+
+    　　console.log("%d年%d月%d日",2011,3,26);
+
+    　　console.log("圆周率是%f",3.1415926);
+
+[null > 641DE31B-8C3C-4D75-995E-38289702EA2D.png]
+
+%o占位符，可以用来查看一个对象内部情况。比如，有这样一个对象：
+
+    　　var dog = {} ;
+
+    　　dog.name = "大毛" ;
+
+    　　dog.color = "黄色";
+
+然后，对它使用o%占位符。
+
+    　　console.log("%o",dog);
+
+[null > 5F8941E3-FD65-4ADF-9A3F-7A6CAA2EEC03.png]
+三、分组显示
+
+如果信息太多，可以分组显示，用到的方法是console.group()和console.groupEnd()。
+
+    　　console.group("第一组信息");
+
+    　　　　console.log("第一组第一条");
+
+    　　　　console.log("第一组第二条");
+
+    　　console.groupEnd();
+
+    　　console.group("第二组信息");
+
+    　　　　console.log("第二组第一条");
+
+    　　　　console.log("第二组第二条");
+
+    　　console.groupEnd();
+
+[null > 687C6C0B-7D25-4EF1-AF09-3CE15009B205.png]
+
+点击组标题，该组信息会折叠或展开。
+
+[null > 5F5C6CA6-78ED-482D-AC99-653C78DAAEF4.png]
+四、console.dir()
+
+console.dir()可以显示一个对象所有的属性和方法。
+
+比如，现在为第二节的dog对象，添加一个bark()方法。
+
+    　　dog.bark = function(){alert("汪汪汪");};
+
+然后，显示该对象的内容，
+
+    　　console.dir(dog);
+
+[null > 1C0354C6-5761-4A38-B8DD-007CB81F333F.png]
+五、console.dirxml()
+
+console.dirxml()用来显示网页的某个节点（node）所包含的html/xml代码。
+
+比如，先获取一个表格节点，
+
+    　　var table = document.getElementById("table1");
+
+然后，显示该节点包含的代码。
+
+    　　console.dirxml(table);
+
+[null > AE4CD872-5BA0-41A9-887D-0031631CCA6A.png]
+六、console.assert()
+
+console.assert()用来判断一个表达式或变量是否为真。如果结果为否，则在控制台输出一条相应信息，并且抛出一个异常。
+
+比如，下面两个判断的结果都为否。
+
+    　　var result = 0;
+
+    　　console.assert( result );
+
+    　　var year = 2000;
+
+    　　console.assert(year == 2011 );
+
+[null > 04FF8DE5-111A-46AA-AE4D-423782417819.png]
+七、console.trace()
+
+console.trace()用来追踪函数的调用轨迹。
+
+比如，有一个加法器函数。
+
+    　　function add(a,b){
+
+    　　　　return a+b;
+
+    　　}
+
+我想知道这个函数是如何被调用的，在其中加入console.trace()方法就可以了。
+
+    　　function add(a,b){
+
+    　　　　console.trace();
+
+    　　　　return a+b;
+
+    　　}
+
+假定这个函数的调用代码如下：
+
+    　　var x = add3(1,1);
+
+    　　function add3(a,b){return add2(a,b);}
+
+    　　function add2(a,b){return add1(a,b);}
+
+    　　function add1(a,b){return add(a,b);}
+
+运行后，会显示add()的调用轨迹，从上到下依次为add()、add1()、add2()、add3()。
+
+[null > 2D0DB63D-31BF-4F55-86C1-90A2E6ADD85F.png]
+八、计时功能
+
+console.time()和console.timeEnd()，用来显示代码的运行时间。
+
+    　　console.time("计时器一");
+
+    　　for(var i=0;i<1000;i++){
+
+    　　　　for(var j=0;j<1000;j++){}
+
+    　　}
+
+    　　console.timeEnd("计时器一");
+
+[null > 141F7351-E395-489D-BC33-FC4ABAC61CF3.png]
+九、性能分析
+
+性能分析（Profiler）就是分析程序各个部分的运行时间，找出瓶颈所在，使用的方法是console.profile()。
+
+假定有一个函数Foo()，里面调用了另外两个函数funcA()和funcB()，其中funcA()调用10次，funcB()调用1次。
+
+    　　function Foo(){
+
+    　　　　for(var i=0;i<10;i++){funcA(1000);}
+
+    　　　　funcB(10000);
+
+    　　}
+
+    　　function funcA(count){
+
+    　　　　for(var i=0;i<count;i++){}
+
+    　　}
+
+    　　function funcB(count){
+
+    　　　　for(var i=0;i<count;i++){}
+
+    　　}
+
+然后，就可以分析Foo()的运行性能了。
+
+    　　console.profile('性能分析器一');
+
+    　　Foo();
+
+    　　console.profileEnd();
+
+控制台会显示一张性能分析表，如下图。
+
+[null > 9E56E6FE-BAB8-4126-AF3A-A30AA25B29E1.png]
+
+标题栏提示，一共运行了12个函数，共耗时2.656毫秒。其中funcA()运行10次，耗时1.391毫秒，最短运行时间0.123毫秒，最长0.284毫秒，平均0.139毫秒；funcB()运行1次，耗时1.229ms毫秒。
+
+除了使用console.profile()方法，firebug还提供了一个"概况"（Profiler）按钮。第一次点击该按钮，"性能分析" 开始，你可以对网页进行某种操作（比如ajax操作），然后第二次点击该按钮，"性能分析"结束，该操作引发的所有运算就会进行性能分析。
+
+[null > E7DDFCE8-FB7E-4CA2-9D93-138D496A9F2A.png]
+其它
+
+从console.log说起
